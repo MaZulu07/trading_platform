@@ -5,6 +5,7 @@ import com.exchange.trading.repository.WalletRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class WalletService {
@@ -24,6 +25,14 @@ public class WalletService {
 
     public Wallet getWallet(String userId) {
         return walletRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+                .orElseGet(() -> createWallet(userId));
+    }
+
+    public List<Wallet> getAllWallets() {
+        return walletRepository.findAll();
+    }
+
+    public Wallet updateWallet(Wallet wallet) {
+        return walletRepository.save(wallet);
     }
 }

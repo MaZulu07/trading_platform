@@ -1,16 +1,23 @@
 package com.exchange.trading.controller;
 
-import com.exchange.trading.model.Trade;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequestMapping("/api/trade-ws")
 public class TradeWebSocketController {
 
-    @MessageMapping("/trade")
-    @SendTo("/topic/trades")
-    public Trade broadcastTrade(Trade trade) {
-        return trade;
+    @PostMapping("/test")
+    public ResponseEntity<?> testEndpoint(@RequestBody String message) {
+        try {
+            // simulate processing
+            String response = "Received: " + message;
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal server error: " + e.getMessage());
+        }
     }
 }
