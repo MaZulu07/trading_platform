@@ -2,6 +2,8 @@ package com.exchange.trading.controller;
 
 import com.exchange.trading.model.Trade;
 import com.exchange.trading.service.TradeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,18 +13,28 @@ import java.util.List;
 public class TradeController {
 
     private final TradeService tradeService;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public TradeController(TradeService tradeService) {
+    @Autowired
+    public TradeController(TradeService tradeService, SimpMessagingTemplate messagingTemplate) {
         this.tradeService = tradeService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @PostMapping("/execute")
     public Trade executeTrade(@RequestBody Trade trade) {
-        return tradeService.executeTrade(trade);
+        Trade saved = tradeService.executeTrade(trade);
+        messagingTemplate.convertAndSend("/topic/trades", saved);
+        return saved;
+    }
+
+    @GetMapping("/all")
+    public List<Trade> getAllTrades() {
+        return tradeService.getAllTrades();
     }
 
     @GetMapping("/{userId}")
-    public List<Trade> getTrades(@PathVariable String userId) {
+    public List<Trade> getTradesByUser(@PathVariable String userId) {
         return tradeService.getTrades(userId);
     }
 }

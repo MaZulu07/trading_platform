@@ -16,7 +16,13 @@ public class TradeService {
     }
 
     public Trade executeTrade(Trade trade) {
+        if (trade.getTimestamp() == null)
+            trade.setTimestamp(java.time.LocalDateTime.now());
         return tradeRepository.save(trade);
+    }
+
+    public List<Trade> getAllTrades() {
+        return tradeRepository.findAll();
     }
 
     public List<Trade> getTrades(String userId) {

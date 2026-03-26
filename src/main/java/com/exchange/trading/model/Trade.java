@@ -2,7 +2,6 @@ package com.exchange.trading.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -15,7 +14,7 @@ public class Trade {
     private Long id;
 
     private String userId;
-    private String symbol; // e.g., BTCUSDT
+    private String symbol;
     private BigDecimal quantity;
     private BigDecimal price;
     private LocalDateTime timestamp = LocalDateTime.now();
